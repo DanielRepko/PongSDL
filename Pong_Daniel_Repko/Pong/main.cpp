@@ -25,6 +25,13 @@ SDL_Rect AIPaddle;
 SDL_Rect Ball;
 SDL_Rect Divider;
 
+//creating an event variable to be used to read input events
+SDL_Event event;
+
+//Mouse coordinates
+int mouse_x, mouse_y;
+
+
 /*
 	Initialize the window, renderer, and game objects (paddles, ball)
 */
@@ -82,7 +89,33 @@ void LoadGame()
 */
 void Input()
 {
+	//Queuing events
+	while (SDL_PollEvent(&event))
+	{
+		//Track mouse movement
+		if (event.type == SDL_MOUSEMOTION)
+		{
+			SDL_GetMouseState(&mouse_x, &mouse_y);
+		}
 
+		//Clicking 'x'
+		if (event.type == SDL_QUIT)
+		{
+			running = false;
+		}
+
+		//pressing a key
+		if (event.type == SDL_KEYDOWN)
+		{
+			switch (event.key.keysym.sym)
+			{
+			//Pressing ESC exits from the game
+			case SDLK_ESCAPE:
+				running = false;
+				break;
+			}
+		}
+	}
 }
 
 /*
@@ -90,7 +123,14 @@ void Input()
 */
 void Update()
 {
+	//making the player paddle move with the mouse
+	PlayerPaddle.y = mouse_y;
 
+	//adding movement to the ball
+	Ball.x += 1;
+	Ball.y += 1;
+
+	SDL_Delay(10);
 }
 
 /*
