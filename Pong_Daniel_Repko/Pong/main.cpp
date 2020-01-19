@@ -8,6 +8,8 @@
 
 //including the SDL.h header file
 #include "SDL.h"
+#include <stdlib.h>
+#include <time.h>
 
 //creating constants for the dimensions of the window
 #define WINDOW_WIDTH	800
@@ -30,6 +32,10 @@ SDL_Event event;
 
 //Mouse coordinates
 int mouse_x, mouse_y;
+
+//Ball Speeds
+int speed_x, speed_y;
+int direction[2] = { -1, 1 };
 
 
 /*
@@ -78,6 +84,11 @@ void LoadGame()
 	Ball.h = 20;
 	Ball.w = 20;
 
+	//setting the speed of the ball
+	speed_x = -1;
+	speed_y = -1;
+
+	//setting the dimensions and position of the divider
 	Divider.x = 400;
 	Divider.y = 0;
 	Divider.w = 8;
@@ -127,8 +138,27 @@ void Update()
 	PlayerPaddle.y = mouse_y;
 
 	//adding movement to the ball
-	Ball.x += 1;
-	Ball.y += 1;
+	Ball.x += speed_x;
+	Ball.y += speed_y;
+
+	//resetting the ball if it hits the side walls
+	if (Ball.x < 0 || Ball.x > WINDOW_WIDTH)
+	{
+		Ball.x = WINDOW_WIDTH / 2;
+		Ball.y = WINDOW_HEIGHT / 2;
+		//this expression produces random -1, -2, 1 and 2
+		srand(time(NULL));
+		speed_x = (rand() % 2 + 1) * direction[rand() % 2];
+		speed_y = (rand() % 2 + 1) * direction[rand() % 2];
+	}
+
+	//bouncing the ball off of the top and bottom walls
+	if (Ball.y < 0 || Ball.y > (WINDOW_HEIGHT - Ball.h))
+	{
+		speed_y = -speed_y;
+	}
+
+	AIPaddle.y = Ball.y - (AIPaddle.h / 2) + (Ball.h / 2);
 
 	SDL_Delay(10);
 }
