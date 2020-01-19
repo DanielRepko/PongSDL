@@ -38,6 +38,51 @@ int speed_x, speed_y;
 int direction[2] = { -1, 1 };
 
 
+bool CheckCollision(SDL_Rect rectA, SDL_Rect rectB)
+{
+	//the sides of the rectangles
+	int leftA, leftB;
+	int rightA, rightB;
+	int topA, topB;
+	int bottomA, bottomB;
+
+	//calculate the sides of rect A
+	leftA = rectA.x;
+	rightA = rectA.x + rectA.w;
+	topA = rectA.y;
+	bottomA = rectA.y + rectA.h;
+
+	//calculate the sides of rect B
+	leftB = rectB.x;
+	rightB = rectB.x + rectB.w;
+	topB = rectB.y;
+	bottomB= rectB.y + rectB.h;
+
+	//if any of the sides from A are outside of B
+	if (bottomA <= topB)
+	{
+		return false;
+	}
+
+	if (topA >= bottomB)
+	{
+		return false;
+	}
+
+	if (rightA <= leftB)
+	{
+		return false;
+	}
+
+	if (leftA >= rightB)
+	{
+		return false;
+	}
+
+	//if none of the sides from A are outside B
+	return true;
+}
+
 /*
 	Initialize the window, renderer, and game objects (paddles, ball)
 */
@@ -158,7 +203,13 @@ void Update()
 		speed_y = -speed_y;
 	}
 
+	//moving the AIPaddle with the Ball
 	AIPaddle.y = Ball.y - (AIPaddle.h / 2) + (Ball.h / 2);
+
+	if (CheckCollision(Ball, AIPaddle) || CheckCollision(Ball, PlayerPaddle))
+	{
+		speed_x = -speed_x;
+	}
 
 	SDL_Delay(10);
 }
