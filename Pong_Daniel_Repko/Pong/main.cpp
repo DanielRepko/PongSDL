@@ -222,18 +222,22 @@ void DrawScreen()
 	//clearing the renderer using the specified drawing color
 	SDL_RenderClear(renderer);
 
+	srand(time(NULL));
+
 	//creating a Rect for the background and placing it in the renderer
 	SDL_Rect background = { 0, 0, 800, 600 };
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderFillRect(renderer, &background);
 
 	//Drawing and setting the color of the paddles
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_SetRenderDrawColor(renderer, (rand() % 175 + 1), (rand() % 175 + 1), 255, 255);
 	SDL_RenderFillRect(renderer, &PlayerPaddle);
+	SDL_SetRenderDrawColor(renderer, 255, (rand() % 175 + 1), (rand() % 175 + 1), 255);
 	SDL_RenderFillRect(renderer, &AIPaddle);
 
 	//Drawing and setting the color of the ball
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	
+	SDL_SetRenderDrawColor(renderer, (rand() % 225 + 1), 255, (rand() % 225 + 1), 255);
 	SDL_RenderFillRect(renderer, &Ball);
 
 	//Drawing and setting the color of the divider
